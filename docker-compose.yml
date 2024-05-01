@@ -1,16 +1,22 @@
-version: "3.8"
-
 services:
   django:
     container_name: django
+    hostname: example.com
     build: ./django
-    ports:
-      - "8000:8000"
+    # expose:
+    #   - 8000
+    # ports:
+    #   - "8000:8000"
     tty: true
     volumes:
       - ./django:/usr/src/app
+      - gunicorn-sock:/var/run/gunicorn
   nginx:
     container_name: nginx
     build: ./nginx
     ports:
     - "8080:8000"
+    volumes:
+      - gunicorn-sock:/var/run/gunicorn
+volumes:
+  gunicorn-sock:
