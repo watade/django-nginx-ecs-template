@@ -1,6 +1,6 @@
 FROM nginx:1.25.4
-# USER nginx
 
-COPY . /etc/nginx
-
-# EXPOSE 8080
+# 設定ファイルの移動
+RUN rm -f /etc/nginx/conf.d/*
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY conf.d/django.conf /etc/nginx/conf.d/django.conf
