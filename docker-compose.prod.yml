@@ -1,0 +1,24 @@
+services:
+  django:
+    container_name: django
+    image: test-django
+    build:
+      context: ./django
+      dockerfile: Dockerfile.prod
+    volumes:
+      - gunicorn-sock:/var/run/gunicorn
+      - django-static:/usr/src/app/static
+  nginx:
+    container_name: nginx
+    image: test-nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.prod
+    ports:
+      - "80:80"
+    volumes:
+      - gunicorn-sock:/var/run/gunicorn
+      - django-static:/usr/share/static
+volumes:
+  gunicorn-sock:
+  django-static:

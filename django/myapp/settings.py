@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
+import requests
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +28,18 @@ SECRET_KEY = "django-insecure-g@_wqbf)*u^o2-i#a@xh2ds+66r7%%jrtg(xs86ch98t9sunv2
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+# get local IP from the instance metadata and add to allowed hosts
+METADATA_URI = "http://169.254.170.2/v2/metadata"
+try:
+    resp = requests.get(METADATA_URI, timeout=(6.0, 7.5))
+    data = resp.json()
+    container_meta = data["Containers"][0]
+    FARGATE_PRIVATE_IP = container_meta["Networks"][0]["IPv4Addresses"][0]
+except Exception:
+    pass
+ALLOWED_HOSTS.append(FARGATE_PRIVATE_IP)
+# add
+ALLOWED_HOSTS.append(os.environ["NLB_DOMAIN_NAME"])
 
 # Application definition
 
