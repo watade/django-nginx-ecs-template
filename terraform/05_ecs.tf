@@ -94,6 +94,10 @@ resource "aws_ecs_task_definition" "django_ecs_task" {
         {
           name  = "POSTGRES_HOST"
           value = "django-ecs-db.coowltz0fbko.ap-northeast-1.rds.amazonaws.com"
+        },
+        {
+          name  = "SECRET_KEY"
+          value = var.secret_key
         }
       ]
       mountPoints = [
